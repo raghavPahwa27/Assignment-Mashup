@@ -3,3 +3,4 @@ yt-dlp
 pydub
 email-validator
 gunicorn
+pyaudioop
