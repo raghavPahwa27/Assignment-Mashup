@@ -12,8 +12,8 @@ app = Flask(__name__)
 
 
 # ------------------- SETTINGS (CHANGE THESE) -------------------
-SENDER_EMAIL = "rpahwa_be23@thapar.edu"
-SENDER_PASSWORD = "eiae gjxn idgt szcg"   # Gmail App Password
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
+SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")  # Gmail App Password
 # ---------------------------------------------------------------
 
 
