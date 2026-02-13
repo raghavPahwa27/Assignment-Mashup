@@ -48,19 +48,25 @@ def download_audios(singer, n):
     cookie_path = get_writable_cookies_path()
 
     ydl_opts = {
-        "cookiefile": cookie_path,
-        "format": "bestaudio/best",
-        "outtmpl": "audios/%(title)s.%(ext)s",
-        "noplaylist": True,
-        "quiet": True,
-        "socket_timeout": 30,
-        "retries": 10,
-        "postprocessors": [{
-            "key": "FFmpegExtractAudio",
-            "preferredcodec": "mp3",
-            "preferredquality": "192",
-        }],
-    }
+    "cookiefile": cookie_path,
+    "format": "bestaudio[ext=m4a]/bestaudio/best",
+    "outtmpl": "audios/%(title)s.%(ext)s",
+    "noplaylist": True,
+    "quiet": True,
+    "socket_timeout": 30,
+    "retries": 10,
+    "extractor_args": {
+        "youtube": {
+            "player_client": ["android", "web"],
+            "skip": ["dash", "hls"]
+        }
+    },
+    "postprocessors": [{
+        "key": "FFmpegExtractAudio",
+        "preferredcodec": "mp3",
+        "preferredquality": "192",
+    }],
+}
 
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([query])
