@@ -33,7 +33,7 @@ def download_audios(singer, n):
     query = f"ytsearch{n}:{singer} song"
 
     ydl_opts = {
-    "cookiefile": "cookies.txt",
+    "cookiefile": "/etc/secrets/cookies.txt",
     "format": "bestaudio/best",
     "outtmpl": "audios/%(title)s.%(ext)s",
     "noplaylist": True,
