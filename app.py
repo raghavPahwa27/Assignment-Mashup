@@ -10,11 +10,10 @@ from email_validator import validate_email, EmailNotValidError
 
 app = Flask(__name__)
 
-
-# ------------------- SETTINGS (CHANGE THESE) -------------------
+# ------------------- SETTINGS -------------------
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")  # Gmail App Password
-# ---------------------------------------------------------------
+# ------------------------------------------------
 
 
 def create_folders():
@@ -29,23 +28,39 @@ def create_folders():
         os.makedirs(folder, exist_ok=True)
 
 
+def get_writable_cookies_path():
+    """
+    Render stores secret files in /etc/secrets (read-only).
+    yt-dlp tries to update cookies file, so we copy it to /tmp (writable).
+    """
+    src = "/etc/secrets/cookies.txt"
+    dst = "/tmp/cookies.txt"
+
+    if os.path.exists(src):
+        shutil.copy(src, dst)
+
+    return dst
+
+
 def download_audios(singer, n):
     query = f"ytsearch{n}:{singer} song"
 
+    cookie_path = get_writable_cookies_path()
+
     ydl_opts = {
-    "cookiefile": "/etc/secrets/cookies.txt",
-    "format": "bestaudio/best",
-    "outtmpl": "audios/%(title)s.%(ext)s",
-    "noplaylist": True,
-    "quiet": True,
-    "socket_timeout": 30,
-    "retries": 10,
-    "postprocessors": [{
-        "key": "FFmpegExtractAudio",
-        "preferredcodec": "mp3",
-        "preferredquality": "192",
-    }],
-}
+        "cookiefile": cookie_path,
+        "format": "bestaudio/best",
+        "outtmpl": "audios/%(title)s.%(ext)s",
+        "noplaylist": True,
+        "quiet": True,
+        "socket_timeout": 30,
+        "retries": 10,
+        "postprocessors": [{
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "mp3",
+            "preferredquality": "192",
+        }],
+    }
 
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([query])
@@ -94,7 +109,12 @@ def send_email(receiver_email, zip_path):
         file_data = f.read()
         file_name = os.path.basename(zip_path)
 
-    msg.add_attachment(file_data, maintype="application", subtype="zip", filename=file_name)
+    msg.add_attachment(
+        file_data,
+        maintype="application",
+        subtype="zip",
+        filename=file_name
+    )
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(SENDER_EMAIL, SENDER_PASSWORD)
@@ -104,6 +124,7 @@ def send_email(receiver_email, zip_path):
 def cleanup():
     shutil.rmtree("audios", ignore_errors=True)
     shutil.rmtree("cuts", ignore_errors=True)
+    shutil.rmtree("output", ignore_errors=True)
 
 
 @app.route("/", methods=["GET", "POST"])
