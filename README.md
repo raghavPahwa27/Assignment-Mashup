@@ -50,7 +50,12 @@ The application downloads YouTube videos, converts them to audio, extracts the f
 1. **User Input**: Flask form collects Singer Name, Number of Videos, Duration, and Email
 2. **Process Mashup**: Backend performs same operations as CLI program
 3. **Package & Send**: Zips final MP3 and sends to user via SMTP email
+📸 Screenshots
 
+### Web Interface
+![WhatsApp Image 2026-02-14 at 4 03 12 AM](https://github.com/user-attachments/assets/383a08da-5d2e-48b2-8592-90e3cc1e5341)
+
+*The interface includes fields for Singer Name, Number of Videos, Duration, Email ID, and a Submit button.*
 ## 💻 Usage
 
 ### Program 1: Command Line
@@ -71,6 +76,7 @@ python 102303608.py "Sharry Maan" 20 30 output.mp3
 - `OutputFileName`: Name of the output mashup file (with .mp3 extension)
 
 ### Program 2: Web Application
+![WhatsApp Image 2026-02-14 at 4 03 12 AM](https://github.com/user-attachments/assets/819cd4b5-d5c9-4c4c-9cd0-9e15b6473647)
 
 1. **Start the Flask server**
 ```bash
@@ -125,9 +131,4 @@ This project **cannot be reliably deployed** on cloud platforms like Render, Her
 http://127.0.0.1:5000/
 ```
 
-## 📸 Screenshots
-
-### Web Interface
-![Web Interface](screenshot.png)
-
-*The interface includes fields for Singer Name, Number of Videos, Duration, Email ID, and a Submit button.*
+## 
